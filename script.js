@@ -143,20 +143,20 @@ async function refreshAnalytics(options = {}) {
 }
 
 async function trackVisitOnce() {
+  const shouldIncrement = sessionStorage.getItem(VISIT_TRACKED_KEY) !== "true";
+
+  if (shouldIncrement) {
+    sessionStorage.setItem(VISIT_TRACKED_KEY, "true");
+
+    try {
+      await incrementCounter(COUNTER_KEYS.visits);
+    } catch {
+      // Ignore tracking errors so the app keeps working normally.
+    }
+  }
+
   if (isAdminView) {
     await refreshAnalytics();
-    return;
-  }
-
-  if (sessionStorage.getItem(VISIT_TRACKED_KEY) === "true") {
-    return;
-  }
-
-  sessionStorage.setItem(VISIT_TRACKED_KEY, "true");
-  try {
-    await incrementCounter(COUNTER_KEYS.visits);
-  } catch {
-    // Ignore public tracking errors so the app keeps working normally.
   }
 }
 
