@@ -59,3 +59,5 @@ Your public link will look like:
 - QR generation now runs locally in the browser, so the installed PWA no longer depends on the Python API after it is cached.
 - Start `python app.py` at least once to serve the app locally and let the browser install/cache it.
 - The app uses relative paths so it works from a GitHub Pages repository URL, not just from a root domain.
+- Visits and install counts are tracked with CounterAPI's public V1 endpoints, which are simple but public and rate-limited.
+- Install counts are best-effort only because some browsers, especially on iPhone, do not reliably fire the PWA `appinstalled` event.
