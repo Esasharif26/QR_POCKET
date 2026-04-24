@@ -1,0 +1,10 @@
+__pycache__/
+lib/
+pydeps/
+vendor/
+vendor-js/
+wheelhouse/
+bundle.js
+qrious.js
+qrious.min.js
+test-local.js

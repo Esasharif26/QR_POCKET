@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Open QR App in Edge",
+      "type": "msedge",
+      "request": "launch",
+      "url": "http://localhost:4173",
+      "preLaunchTask": "Start QR App",
+      "webRoot": "${workspaceFolder}"
+    }
+  ]
+}

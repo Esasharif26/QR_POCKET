@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320" role="img" aria-label="QR placeholder">
+  <rect width="320" height="320" rx="28" fill="#fffaf5" />
+  <rect x="30" y="30" width="92" height="92" rx="14" fill="#2d1b0f" />
+  <rect x="48" y="48" width="56" height="56" rx="8" fill="#fffaf5" />
+  <rect x="62" y="62" width="28" height="28" rx="6" fill="#2d1b0f" />
+  <rect x="198" y="30" width="92" height="92" rx="14" fill="#2d1b0f" />
+  <rect x="216" y="48" width="56" height="56" rx="8" fill="#fffaf5" />
+  <rect x="230" y="62" width="28" height="28" rx="6" fill="#2d1b0f" />
+  <rect x="30" y="198" width="92" height="92" rx="14" fill="#2d1b0f" />
+  <rect x="48" y="216" width="56" height="56" rx="8" fill="#fffaf5" />
+  <rect x="62" y="230" width="28" height="28" rx="6" fill="#2d1b0f" />
+  <g fill="#d6602d">
+    <rect x="148" y="144" width="24" height="24" rx="5" />
+    <rect x="180" y="144" width="24" height="24" rx="5" />
+    <rect x="148" y="176" width="24" height="24" rx="5" />
+    <rect x="210" y="176" width="24" height="24" rx="5" />
+    <rect x="180" y="208" width="24" height="24" rx="5" />
+    <rect x="240" y="208" width="24" height="24" rx="5" />
+  </g>
+</svg>
