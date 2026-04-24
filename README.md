@@ -61,3 +61,4 @@ Your public link will look like:
 - The app uses relative paths so it works from a GitHub Pages repository URL, not just from a root domain.
 - Visits and install counts are tracked with CounterAPI's public V1 endpoints, which are simple but public and rate-limited.
 - Install counts are best-effort only because some browsers, especially on iPhone, do not reliably fire the PWA `appinstalled` event.
+- The analytics panel is hidden on the public GitHub Pages site and only shown when you open the app locally on `localhost` or `127.0.0.1`.

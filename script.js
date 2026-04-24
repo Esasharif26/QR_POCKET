@@ -8,6 +8,7 @@ const shareBtn = document.getElementById("share-btn");
 const installBtn = document.getElementById("install-btn");
 const historyList = document.getElementById("history-list");
 const clearHistoryBtn = document.getElementById("clear-history-btn");
+const analyticsPanel = document.getElementById("analytics-panel");
 const viewsCount = document.getElementById("views-count");
 const installsCount = document.getElementById("installs-count");
 const analyticsStatus = document.getElementById("analytics-status");
@@ -23,6 +24,8 @@ const COUNTER_KEYS = {
   visits: "site-visits",
   installs: "pwa-installs",
 };
+const ADMIN_HOSTNAMES = new Set(["localhost", "127.0.0.1"]);
+const isAdminView = ADMIN_HOSTNAMES.has(window.location.hostname);
 
 let deferredInstallPrompt = null;
 const qr = new QRious({
@@ -140,13 +143,21 @@ async function refreshAnalytics(options = {}) {
 }
 
 async function trackVisitOnce() {
-  if (sessionStorage.getItem(VISIT_TRACKED_KEY) === "true") {
+  if (isAdminView) {
     await refreshAnalytics();
     return;
   }
 
+  if (sessionStorage.getItem(VISIT_TRACKED_KEY) === "true") {
+    return;
+  }
+
   sessionStorage.setItem(VISIT_TRACKED_KEY, "true");
-  await refreshAnalytics({ incrementVisit: true });
+  try {
+    await incrementCounter(COUNTER_KEYS.visits);
+  } catch {
+    // Ignore public tracking errors so the app keeps working normally.
+  }
 }
 
 function updateHistory(url, fileName) {
@@ -328,11 +339,15 @@ window.addEventListener("appinstalled", () => {
 
   incrementCounter(COUNTER_KEYS.installs)
     .then((installValue) => {
-      installsCount.textContent = formatCount(installValue);
-      setAnalyticsStatus("Install tracked");
+      if (isAdminView) {
+        installsCount.textContent = formatCount(installValue);
+        setAnalyticsStatus("Install tracked");
+      }
     })
     .catch(() => {
-      setAnalyticsStatus("Install happened, but tracking is unavailable");
+      if (isAdminView) {
+        setAnalyticsStatus("Install happened, but tracking is unavailable");
+      }
     });
 });
 
@@ -344,4 +359,5 @@ if ("serviceWorker" in navigator) {
 
 renderHistory();
 renderQr("https://example.com", "example", false);
+analyticsPanel.hidden = !isAdminView;
 trackVisitOnce();
