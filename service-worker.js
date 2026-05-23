@@ -1,10 +1,12 @@
-const CACHE_NAME = "qr-pocket-v3";
+const CACHE_NAME = "qr-pocket-v4";
 const APP_ASSETS = [
   "./",
   "./index.html",
   "./styles.css",
   "./script.js",
   "./qr-lib.js",
+  "./esa-stats-portal-9x7.html",
+  "./esa-stats-portal-9x7.js",
   "./manifest.webmanifest",
   "./assets/icon-192.png",
   "./assets/icon-512.png",

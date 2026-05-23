@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>QR Pocket Admin</title>
+    <meta name="theme-color" content="#d6602d" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell admin-shell">
+      <section class="admin-card" id="login-card">
+        <div class="intro">
+          <p class="eyebrow">Private Access</p>
+          <h1>Admin dashboard</h1>
+          <p class="subcopy">
+            Enter your admin code to view visits, installs, and QR generation totals.
+          </p>
+        </div>
+
+        <form class="generator-form" id="admin-login-form">
+          <label class="field-label" for="admin-passcode">Admin code</label>
+          <div class="input-row">
+            <input
+              id="admin-passcode"
+              name="passcode"
+              type="password"
+              placeholder="Enter admin code"
+              autocomplete="current-password"
+              required
+            />
+            <button type="submit" class="primary-btn">Unlock</button>
+          </div>
+          <p class="helper-text" id="admin-status">Only the admin can view these stats.</p>
+        </form>
+      </section>
+
+      <section class="admin-card" id="dashboard-card" hidden>
+        <div class="history-header">
+          <div>
+            <p class="eyebrow">Private Access</p>
+            <h1 class="admin-title">QR Pocket stats</h1>
+            <p class="subcopy">These counts are tracked across your live app.</p>
+          </div>
+          <div class="admin-actions">
+            <button type="button" class="ghost-btn" id="refresh-stats-btn">Refresh</button>
+            <button type="button" class="ghost-btn" id="logout-btn">Lock</button>
+          </div>
+        </div>
+
+        <div class="analytics-grid admin-grid">
+          <article class="analytics-card">
+            <p class="analytics-number" id="admin-visits">--</p>
+            <p class="analytics-label">Visits</p>
+          </article>
+          <article class="analytics-card">
+            <p class="analytics-number" id="admin-installs">--</p>
+            <p class="analytics-label">Tracked installs</p>
+          </article>
+          <article class="analytics-card">
+            <p class="analytics-number" id="admin-generations">--</p>
+            <p class="analytics-label">QR generations</p>
+          </article>
+        </div>
+
+        <p class="helper-text" id="admin-stats-status">Loading stats...</p>
+      </section>
+    </main>
+
+    <script src="esa-stats-portal-9x7.js"></script>
+  </body>
+</html>

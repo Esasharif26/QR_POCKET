@@ -8,10 +8,6 @@ const shareBtn = document.getElementById("share-btn");
 const installBtn = document.getElementById("install-btn");
 const historyList = document.getElementById("history-list");
 const clearHistoryBtn = document.getElementById("clear-history-btn");
-const analyticsPanel = document.getElementById("analytics-panel");
-const viewsCount = document.getElementById("views-count");
-const installsCount = document.getElementById("installs-count");
-const analyticsStatus = document.getElementById("analytics-status");
 const qrImage = document.getElementById("qr-image");
 const qrCanvas = document.getElementById("qr-canvas");
 
@@ -23,9 +19,8 @@ const COUNTER_NAMESPACE = "esasharif26-qr-pocket";
 const COUNTER_KEYS = {
   visits: "site-visits",
   installs: "pwa-installs",
+  generations: "qr-generations",
 };
-const ADMIN_HOSTNAMES = new Set(["localhost", "127.0.0.1"]);
-const isAdminView = ADMIN_HOSTNAMES.has(window.location.hostname);
 
 let deferredInstallPrompt = null;
 const qr = new QRious({
@@ -43,8 +38,20 @@ function setStatus(message, isError = false) {
   statusText.classList.toggle("error", isError);
 }
 
-function setAnalyticsStatus(message) {
-  analyticsStatus.textContent = message;
+function extractCounterValue(payload) {
+  const candidate = payload?.value ?? payload?.data ?? payload?.count;
+  return Number.isFinite(candidate) ? candidate : Number(candidate) || 0;
+}
+
+async function incrementCounter(name) {
+  const response = await fetch(`${COUNTER_API_BASE}/${COUNTER_NAMESPACE}/${name}/up`);
+
+  if (!response.ok) {
+    throw new Error("Could not update stats.");
+  }
+
+  const data = await response.json();
+  return extractCounterValue(data);
 }
 
 function makeSafeFileName(value) {
@@ -86,78 +93,6 @@ function getHistory() {
 
 function saveHistory(history) {
   localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
-}
-
-function formatCount(value) {
-  return new Intl.NumberFormat().format(value);
-}
-
-function extractCounterValue(payload) {
-  const candidate = payload?.value ?? payload?.data ?? payload?.count;
-  return Number.isFinite(candidate) ? candidate : Number(candidate) || 0;
-}
-
-async function getCounterValue(name) {
-  const response = await fetch(`${COUNTER_API_BASE}/${COUNTER_NAMESPACE}/${name}`);
-
-  if (!response.ok) {
-    throw new Error("Could not load analytics.");
-  }
-
-  const data = await response.json();
-  return extractCounterValue(data);
-}
-
-async function incrementCounter(name) {
-  const response = await fetch(`${COUNTER_API_BASE}/${COUNTER_NAMESPACE}/${name}/up`);
-
-  if (!response.ok) {
-    throw new Error("Could not update analytics.");
-  }
-
-  const data = await response.json();
-  return extractCounterValue(data);
-}
-
-async function refreshAnalytics(options = {}) {
-  const { incrementVisit = false } = options;
-
-  try {
-    setAnalyticsStatus("Updating stats...");
-
-    const visitPromise = incrementVisit
-      ? incrementCounter(COUNTER_KEYS.visits)
-      : getCounterValue(COUNTER_KEYS.visits);
-
-    const [visitValue, installValue] = await Promise.all([
-      visitPromise,
-      getCounterValue(COUNTER_KEYS.installs),
-    ]);
-
-    viewsCount.textContent = formatCount(visitValue);
-    installsCount.textContent = formatCount(installValue);
-    setAnalyticsStatus("Stats updated");
-  } catch (error) {
-    setAnalyticsStatus("Stats unavailable right now");
-  }
-}
-
-async function trackVisitOnce() {
-  const shouldIncrement = sessionStorage.getItem(VISIT_TRACKED_KEY) !== "true";
-
-  if (shouldIncrement) {
-    sessionStorage.setItem(VISIT_TRACKED_KEY, "true");
-
-    try {
-      await incrementCounter(COUNTER_KEYS.visits);
-    } catch {
-      // Ignore tracking errors so the app keeps working normally.
-    }
-  }
-
-  if (isAdminView) {
-    await refreshAnalytics();
-  }
 }
 
 function updateHistory(url, fileName) {
@@ -288,6 +223,7 @@ form.addEventListener("submit", async (event) => {
     );
     urlInput.value = validUrl;
     await renderQr(validUrl, safeFileName);
+    incrementCounter(COUNTER_KEYS.generations).catch(() => {});
   } catch (error) {
     setStatus(error.message, true);
   }
@@ -336,20 +272,21 @@ window.addEventListener("appinstalled", () => {
   deferredInstallPrompt = null;
   installBtn.hidden = true;
   setStatus("App installed successfully.");
-
-  incrementCounter(COUNTER_KEYS.installs)
-    .then((installValue) => {
-      if (isAdminView) {
-        installsCount.textContent = formatCount(installValue);
-        setAnalyticsStatus("Install tracked");
-      }
-    })
-    .catch(() => {
-      if (isAdminView) {
-        setAnalyticsStatus("Install happened, but tracking is unavailable");
-      }
-    });
+  incrementCounter(COUNTER_KEYS.installs).catch(() => {});
 });
+
+async function trackVisitOnce() {
+  if (sessionStorage.getItem(VISIT_TRACKED_KEY) === "true") {
+    return;
+  }
+
+  sessionStorage.setItem(VISIT_TRACKED_KEY, "true");
+  try {
+    await incrementCounter(COUNTER_KEYS.visits);
+  } catch {
+    // Ignore tracking errors so the public app keeps working normally.
+  }
+}
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
@@ -359,5 +296,4 @@ if ("serviceWorker" in navigator) {
 
 renderHistory();
 renderQr("https://example.com", "example", false);
-analyticsPanel.hidden = !isAdminView;
 trackVisitOnce();
