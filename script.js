@@ -14,6 +14,7 @@ const qrCanvas = document.getElementById("qr-canvas");
 const HISTORY_KEY = "qr-generator-history";
 const HISTORY_LIMIT = 8;
 const VISIT_TRACKED_KEY = "qr-pocket-visit-tracked";
+const INSTALL_TRACKED_KEY = "qr-pocket-install-tracked";
 const COUNTER_API_BASE = "https://api.counterapi.dev/v1";
 const COUNTER_NAMESPACE = "esasharif26-qr-pocket";
 const COUNTER_KEYS = {
@@ -52,6 +53,11 @@ async function incrementCounter(name) {
 
   const data = await response.json();
   return extractCounterValue(data);
+}
+
+function isStandaloneMode() {
+  return window.matchMedia("(display-mode: standalone)").matches
+    || window.navigator.standalone === true;
 }
 
 function makeSafeFileName(value) {
@@ -272,6 +278,7 @@ window.addEventListener("appinstalled", () => {
   deferredInstallPrompt = null;
   installBtn.hidden = true;
   setStatus("App installed successfully.");
+  localStorage.setItem(INSTALL_TRACKED_KEY, "true");
   incrementCounter(COUNTER_KEYS.installs).catch(() => {});
 });
 
@@ -288,6 +295,23 @@ async function trackVisitOnce() {
   }
 }
 
+async function trackInstalledOpenOnce() {
+  if (!isStandaloneMode()) {
+    return;
+  }
+
+  if (localStorage.getItem(INSTALL_TRACKED_KEY) === "true") {
+    return;
+  }
+
+  localStorage.setItem(INSTALL_TRACKED_KEY, "true");
+  try {
+    await incrementCounter(COUNTER_KEYS.installs);
+  } catch {
+    // Ignore tracking errors so the installed app still works normally.
+  }
+}
+
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     navigator.serviceWorker.register("service-worker.js");
@@ -297,3 +321,4 @@ if ("serviceWorker" in navigator) {
 renderHistory();
 renderQr("https://example.com", "example", false);
 trackVisitOnce();
+trackInstalledOpenOnce();
