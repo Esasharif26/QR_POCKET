@@ -58,4 +58,4 @@ Add a screenshot of your QR Pocket website here.
 Example:
 
 ```markdown
-![QR Pocket Preview](screenshot.png)
+
