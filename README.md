@@ -1,61 +1,61 @@
-# URL to QR Code App
+# 📱 QR Pocket
 
-Small Python-powered web app for turning a URL into a QR code, choosing the download file name, reusing recent history, and installing the app on mobile or desktop.
+### Simple • Fast • Private QR Code Generator
 
-It is also ready for GitHub Pages hosting.
+QR Pocket is a browser-based QR code generator that allows users to quickly create, download, and share QR codes.
 
-## Open in VS Code
+The project was built while learning and practicing frontend web development.
 
-Open this folder in VS Code:
+---
 
-`C:\Users\pc\OneDrive\Documents 1\New project`
+## 🚀 Live Demo
 
-## Run the app
+👉 [Open QR Pocket](https://esasharif26.github.io/QR_POCKET/)
 
-### Option 1: VS Code task
+---
 
-1. Open Command Palette.
-2. Run `Tasks: Run Task`.
-3. Choose `Start QR App`.
-4. Open `http://localhost:4173`.
+## ✨ Features
 
-### Option 2: terminal
+- 🔗 Generate QR codes
+- 📥 Download QR codes
+- 📤 Share QR codes
+- 📜 QR generation history
+- 📱 Installable web app
+- 📱 Responsive design
+- ⚡ Fast browser-based generation
 
-Run the bundled or local Python runtime:
+---
 
-```powershell
-python app.py
-```
+## 🛠️ Technologies Used
 
-## Share with GitHub Pages
+- HTML
+- CSS
+- JavaScript
 
-1. Create a new GitHub repository.
-2. Upload this project to that repository.
-3. Push your files to the `main` branch.
-4. Open your repository on GitHub.
-5. Go to `Settings` -> `Pages`.
-6. Under `Build and deployment`, choose `Deploy from a branch`.
-7. Select branch `main` and folder `/ (root)`.
-8. Save and wait for GitHub Pages to publish the site.
+---
 
-Your public link will look like:
+## 🎯 Project Purpose
 
-`https://your-github-username.github.io/your-repository-name/`
+The purpose of QR Pocket is to create a simple and useful QR code generator while practicing frontend development concepts.
 
-## Files
+This project helped me practice:
 
-- `index.html` - page structure
-- `styles.css` - visual styling
-- `script.js` - local browser QR generation, filename handling, history, share, and install flow
-- `app.py` - tiny Python static server
-- `manifest.webmanifest` - installable app metadata
-- `service-worker.js` - cached offline app shell
-- `assets/` - icons and placeholder art
-- `qr-lib.js` - bundled browser QR library used offline
+- HTML page structure
+- CSS styling
+- Responsive design
+- JavaScript functionality
+- DOM manipulation
+- User interactions
+- Git & GitHub
+- GitHub Pages deployment
 
-## Notes
+---
 
-- History is saved in the browser with `localStorage`.
-- QR generation now runs locally in the browser, so the installed PWA no longer depends on the Python API after it is cached.
-- Start `python app.py` at least once to serve the app locally and let the browser install/cache it.
-- The app uses relative paths so it works from a GitHub Pages repository URL, not just from a root domain.
+## 📸 Preview
+
+Add a screenshot of your QR Pocket website here.
+
+Example:
+
+```markdown
+![QR Pocket Preview](screenshot.png)
