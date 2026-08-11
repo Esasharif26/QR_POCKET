@@ -57,5 +57,6 @@ Add a screenshot of your QR Pocket website here.
 
 Example:
 
-```markdown
+## 📸 Preview
 
+![QR Pocket Preview](qr-pocket-preview.png)
